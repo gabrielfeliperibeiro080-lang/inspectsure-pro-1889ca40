@@ -12,6 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppVistoriasIndexRouteImport } from './routes/app/vistorias.index'
+import { Route as AppImoveisIndexRouteImport } from './routes/app/imoveis.index'
+import { Route as AppImoveisIdRouteImport } from './routes/app/imoveis.$id'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -28,34 +32,86 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppVistoriasIndexRoute = AppVistoriasIndexRouteImport.update({
+  id: '/vistorias/',
+  path: '/vistorias/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppImoveisIndexRoute = AppImoveisIndexRouteImport.update({
+  id: '/imoveis/',
+  path: '/imoveis/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppImoveisIdRoute = AppImoveisIdRouteImport.update({
+  id: '/imoveis/$id',
+  path: '/imoveis/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
+  '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/app/': typeof AppIndexRoute
+  '/app/imoveis/$id': typeof AppImoveisIdRoute
+  '/app/imoveis/': typeof AppImoveisIndexRoute
+  '/app/vistorias/': typeof AppVistoriasIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
   '/login': typeof LoginRoute
+  '/app': typeof AppIndexRoute
+  '/app/imoveis/$id': typeof AppImoveisIdRoute
+  '/app/imoveis': typeof AppImoveisIndexRoute
+  '/app/vistorias': typeof AppVistoriasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
+  '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/app/': typeof AppIndexRoute
+  '/app/imoveis/$id': typeof AppImoveisIdRoute
+  '/app/imoveis/': typeof AppImoveisIndexRoute
+  '/app/vistorias/': typeof AppVistoriasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/login'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/login'
+    | '/app/'
+    | '/app/imoveis/$id'
+    | '/app/imoveis/'
+    | '/app/vistorias/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app' | '/login'
-  id: '__root__' | '/' | '/app' | '/login'
+  to:
+    | '/'
+    | '/login'
+    | '/app'
+    | '/app/imoveis/$id'
+    | '/app/imoveis'
+    | '/app/vistorias'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/login'
+    | '/app/'
+    | '/app/imoveis/$id'
+    | '/app/imoveis/'
+    | '/app/vistorias/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppRoute: typeof AppRoute
+  AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
 }
 
@@ -82,12 +138,56 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/vistorias/': {
+      id: '/app/vistorias/'
+      path: '/vistorias'
+      fullPath: '/app/vistorias/'
+      preLoaderRoute: typeof AppVistoriasIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/imoveis/': {
+      id: '/app/imoveis/'
+      path: '/imoveis'
+      fullPath: '/app/imoveis/'
+      preLoaderRoute: typeof AppImoveisIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/imoveis/$id': {
+      id: '/app/imoveis/$id'
+      path: '/imoveis/$id'
+      fullPath: '/app/imoveis/$id'
+      preLoaderRoute: typeof AppImoveisIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppIndexRoute: typeof AppIndexRoute
+  AppImoveisIdRoute: typeof AppImoveisIdRoute
+  AppImoveisIndexRoute: typeof AppImoveisIndexRoute
+  AppVistoriasIndexRoute: typeof AppVistoriasIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppIndexRoute: AppIndexRoute,
+  AppImoveisIdRoute: AppImoveisIdRoute,
+  AppImoveisIndexRoute: AppImoveisIndexRoute,
+  AppVistoriasIndexRoute: AppVistoriasIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppRoute: AppRoute,
+  AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
