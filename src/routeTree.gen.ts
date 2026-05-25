@@ -13,9 +13,13 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppConfiguracoesRouteImport } from './routes/app/configuracoes'
 import { Route as AppVistoriasIndexRouteImport } from './routes/app/vistorias.index'
 import { Route as AppImoveisIndexRouteImport } from './routes/app/imoveis.index'
+import { Route as AppVistoriasNovaRouteImport } from './routes/app/vistorias.nova'
+import { Route as AppVistoriasIdRouteImport } from './routes/app/vistorias.$id'
 import { Route as AppImoveisIdRouteImport } from './routes/app/imoveis.$id'
+import { Route as AppCompararABRouteImport } from './routes/app/comparar.$a.$b'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -37,6 +41,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppConfiguracoesRoute = AppConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppVistoriasIndexRoute = AppVistoriasIndexRouteImport.update({
   id: '/vistorias/',
   path: '/vistorias/',
@@ -47,9 +56,24 @@ const AppImoveisIndexRoute = AppImoveisIndexRouteImport.update({
   path: '/imoveis/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppVistoriasNovaRoute = AppVistoriasNovaRouteImport.update({
+  id: '/vistorias/nova',
+  path: '/vistorias/nova',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppVistoriasIdRoute = AppVistoriasIdRouteImport.update({
+  id: '/vistorias/$id',
+  path: '/vistorias/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppImoveisIdRoute = AppImoveisIdRouteImport.update({
   id: '/imoveis/$id',
   path: '/imoveis/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCompararABRoute = AppCompararABRouteImport.update({
+  id: '/comparar/$a/$b',
+  path: '/comparar/$a/$b',
   getParentRoute: () => AppRoute,
 } as any)
 
@@ -57,28 +81,40 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/': typeof AppIndexRoute
   '/app/imoveis/$id': typeof AppImoveisIdRoute
+  '/app/vistorias/$id': typeof AppVistoriasIdRoute
+  '/app/vistorias/nova': typeof AppVistoriasNovaRoute
   '/app/imoveis/': typeof AppImoveisIndexRoute
   '/app/vistorias/': typeof AppVistoriasIndexRoute
+  '/app/comparar/$a/$b': typeof AppCompararABRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app': typeof AppIndexRoute
   '/app/imoveis/$id': typeof AppImoveisIdRoute
+  '/app/vistorias/$id': typeof AppVistoriasIdRoute
+  '/app/vistorias/nova': typeof AppVistoriasNovaRoute
   '/app/imoveis': typeof AppImoveisIndexRoute
   '/app/vistorias': typeof AppVistoriasIndexRoute
+  '/app/comparar/$a/$b': typeof AppCompararABRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/': typeof AppIndexRoute
   '/app/imoveis/$id': typeof AppImoveisIdRoute
+  '/app/vistorias/$id': typeof AppVistoriasIdRoute
+  '/app/vistorias/nova': typeof AppVistoriasNovaRoute
   '/app/imoveis/': typeof AppImoveisIndexRoute
   '/app/vistorias/': typeof AppVistoriasIndexRoute
+  '/app/comparar/$a/$b': typeof AppCompararABRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -86,27 +122,39 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/login'
+    | '/app/configuracoes'
     | '/app/'
     | '/app/imoveis/$id'
+    | '/app/vistorias/$id'
+    | '/app/vistorias/nova'
     | '/app/imoveis/'
     | '/app/vistorias/'
+    | '/app/comparar/$a/$b'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
+    | '/app/configuracoes'
     | '/app'
     | '/app/imoveis/$id'
+    | '/app/vistorias/$id'
+    | '/app/vistorias/nova'
     | '/app/imoveis'
     | '/app/vistorias'
+    | '/app/comparar/$a/$b'
   id:
     | '__root__'
     | '/'
     | '/app'
     | '/login'
+    | '/app/configuracoes'
     | '/app/'
     | '/app/imoveis/$id'
+    | '/app/vistorias/$id'
+    | '/app/vistorias/nova'
     | '/app/imoveis/'
     | '/app/vistorias/'
+    | '/app/comparar/$a/$b'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -145,6 +193,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/configuracoes': {
+      id: '/app/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/app/configuracoes'
+      preLoaderRoute: typeof AppConfiguracoesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/vistorias/': {
       id: '/app/vistorias/'
       path: '/vistorias'
@@ -159,6 +214,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppImoveisIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/vistorias/nova': {
+      id: '/app/vistorias/nova'
+      path: '/vistorias/nova'
+      fullPath: '/app/vistorias/nova'
+      preLoaderRoute: typeof AppVistoriasNovaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/vistorias/$id': {
+      id: '/app/vistorias/$id'
+      path: '/vistorias/$id'
+      fullPath: '/app/vistorias/$id'
+      preLoaderRoute: typeof AppVistoriasIdRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/imoveis/$id': {
       id: '/app/imoveis/$id'
       path: '/imoveis/$id'
@@ -166,21 +235,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppImoveisIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/comparar/$a/$b': {
+      id: '/app/comparar/$a/$b'
+      path: '/comparar/$a/$b'
+      fullPath: '/app/comparar/$a/$b'
+      preLoaderRoute: typeof AppCompararABRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppConfiguracoesRoute: typeof AppConfiguracoesRoute
   AppIndexRoute: typeof AppIndexRoute
   AppImoveisIdRoute: typeof AppImoveisIdRoute
+  AppVistoriasIdRoute: typeof AppVistoriasIdRoute
+  AppVistoriasNovaRoute: typeof AppVistoriasNovaRoute
   AppImoveisIndexRoute: typeof AppImoveisIndexRoute
   AppVistoriasIndexRoute: typeof AppVistoriasIndexRoute
+  AppCompararABRoute: typeof AppCompararABRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppConfiguracoesRoute: AppConfiguracoesRoute,
   AppIndexRoute: AppIndexRoute,
   AppImoveisIdRoute: AppImoveisIdRoute,
+  AppVistoriasIdRoute: AppVistoriasIdRoute,
+  AppVistoriasNovaRoute: AppVistoriasNovaRoute,
   AppImoveisIndexRoute: AppImoveisIndexRoute,
   AppVistoriasIndexRoute: AppVistoriasIndexRoute,
+  AppCompararABRoute: AppCompararABRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
