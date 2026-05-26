@@ -75,10 +75,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "theme-color", content: "#1f2a55" },
       { title: "Córtex Vistoria Pro — Vistorias com validade jurídica" },
       { name: "description", content: "Plataforma profissional para vistorias de imóveis: checklist inteligente, assinatura digital, fotos otimizadas e relatórios PDF com hash de integridade." },
-      { property: "og:title", content: "Córtex Vistoria Pro" },
-      { property: "og:description", content: "Vistorias de entrada e saída com validade jurídica para imobiliárias." },
+      { property: "og:title", content: "Córtex Vistoria Pro — Vistorias com validade jurídica" },
+      { property: "og:description", content: "Plataforma profissional para vistorias de imóveis: checklist inteligente, assinatura digital, fotos otimizadas e relatórios PDF com hash de integridade." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "Córtex Vistoria Pro — Vistorias com validade jurídica" },
+      { name: "twitter:description", content: "Plataforma profissional para vistorias de imóveis: checklist inteligente, assinatura digital, fotos otimizadas e relatórios PDF com hash de integridade." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/55d74679-601e-4759-a892-8d5b5726f2b5/id-preview-7aa63eee--52b20100-0594-40cf-985c-4172f305d47f.lovable.app-1779709488145.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/55d74679-601e-4759-a892-8d5b5726f2b5/id-preview-7aa63eee--52b20100-0594-40cf-985c-4172f305d47f.lovable.app-1779709488145.png" },
     ],
     links: [
       {
