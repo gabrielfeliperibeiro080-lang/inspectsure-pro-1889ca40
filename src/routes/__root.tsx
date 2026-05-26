@@ -7,8 +7,10 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 import appCss from "../styles.css?url";
+import { useAuth, useData } from "@/lib/store";
 
 function NotFoundComponent() {
   return (
