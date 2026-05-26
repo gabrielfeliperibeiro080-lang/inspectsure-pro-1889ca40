@@ -56,15 +56,19 @@ function ImoveisList() {
     return text.includes(q.toLowerCase());
   });
 
-  const save = () => {
+  const save = async () => {
     if (!form.street || !form.number || !form.city || !form.ownerName) {
       toast.error("Preencha os campos obrigatórios");
       return;
     }
-    const p = addProperty(form);
-    toast.success(`Imóvel ${p.code} cadastrado`);
-    setForm(empty);
-    setOpen(false);
+    try {
+      const p = await addProperty(form);
+      toast.success(`Imóvel ${p.code} cadastrado`);
+      setForm(empty);
+      setOpen(false);
+    } catch (e: any) {
+      toast.error(e?.message ?? "Erro ao cadastrar");
+    }
   };
 
   return (

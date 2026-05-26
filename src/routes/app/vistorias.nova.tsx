@@ -68,18 +68,22 @@ function NovaVistoria() {
     );
 
     const ip = await getClientIp();
-    const inspection = addInspection({
-      propertyId: selected,
-      type,
-      inspectorName: inspector,
-      tenantName: tenant || undefined,
-      rooms,
-      signatures: [],
-      geo: { ...geo },
-      ip,
-    });
-    toast.success("Vistoria iniciada");
-    navigate({ to: "/app/vistorias/$id", params: { id: inspection.id } });
+    try {
+      const inspection = await addInspection({
+        propertyId: selected,
+        type,
+        inspectorName: inspector,
+        tenantName: tenant || undefined,
+        rooms,
+        signatures: [],
+        geo: { ...geo },
+        ip,
+      });
+      toast.success("Vistoria iniciada");
+      navigate({ to: "/app/vistorias/$id", params: { id: inspection.id } });
+    } catch (e: any) {
+      toast.error(e?.message ?? "Erro ao criar vistoria");
+    }
   };
 
   return (
