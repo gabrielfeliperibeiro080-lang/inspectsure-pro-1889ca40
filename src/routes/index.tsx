@@ -1,19 +1,11 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/")({
-  beforeLoad: () => {
-    // Client-only auth check; on SSR just redirect to /login
-    if (typeof window !== "undefined") {
-      const raw = window.localStorage.getItem("cortex_auth");
-      if (raw) {
-        try {
-          const p = JSON.parse(raw);
-          if (p?.state?.user) throw redirect({ to: "/app" });
-        } catch (e) {
-          if ((e as any)?.options) throw e;
-        }
-      }
-    }
+  beforeLoad: async () => {
+    if (typeof window === "undefined") throw redirect({ to: "/login" });
+    const { data } = await supabase.auth.getSession();
+    if (data.session) throw redirect({ to: "/app" });
     throw redirect({ to: "/login" });
   },
   component: () => null,
