@@ -40,14 +40,40 @@ function Settings() {
         <CardContent className="space-y-3 text-sm">
           <div className="flex items-center justify-between">
             <div>
-              <div className="font-medium">Trial gratuito</div>
+              <div className="font-medium">
+                {user?.subscriptionStatus === "active" ? "Plano InspectSure Pro" : "Trial gratuito"}
+              </div>
               <div className="text-xs text-muted-foreground">
-                7 dias para conhecer todos os recursos.
+                {user?.subscriptionStatus === "active" 
+                  ? "Sua assinatura está ativa." 
+                  : "7 dias para conhecer todos os recursos."}
               </div>
             </div>
-            <Button onClick={() => toast.info("Integração com Mercado Pago disponível após conectar o Supabase.")}>
-              Assinar plano
-            </Button>
+            {user?.subscriptionStatus === "active" ? (
+              <Button variant="outline" disabled>Assinatura Ativa</Button>
+            ) : (
+              <Button onClick={async () => {
+                try {
+                  toast.loading("Gerando link de pagamento...");
+                  const { supabase } = await import("@/integrations/supabase/client");
+                  const { data, error } = await supabase.functions.invoke("create-subscription", {
+                    body: { email: user?.email, userId: user?.id }
+                  });
+                  toast.dismiss();
+                  if (error) throw new Error(error.message);
+                  if (data?.init_point) {
+                    window.location.href = data.init_point;
+                  } else {
+                    throw new Error("Link de pagamento não retornado.");
+                  }
+                } catch (err: any) {
+                  toast.dismiss();
+                  toast.error(`Erro: ${err.message}`);
+                }
+              }}>
+                Assinar plano
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>

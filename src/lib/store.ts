@@ -28,7 +28,7 @@ interface AuthState {
 async function hydrateUserFromAuth(authUserId: string, fallbackEmail: string): Promise<User> {
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id, name, email, role, created_at")
+    .select("id, name, email, role, created_at, subscription_status, subscription_id")
     .eq("id", authUserId)
     .maybeSingle();
 
@@ -38,6 +38,8 @@ async function hydrateUserFromAuth(authUserId: string, fallbackEmail: string): P
       name: profile.name ?? fallbackEmail,
       email: profile.email ?? fallbackEmail,
       role: (profile.role as UserRole) ?? "admin",
+      subscriptionStatus: profile.subscription_status ?? "trial",
+      subscriptionId: profile.subscription_id ?? undefined,
       createdAt: profile.created_at,
     };
   }
@@ -47,6 +49,7 @@ async function hydrateUserFromAuth(authUserId: string, fallbackEmail: string): P
     name: fallbackEmail,
     email: fallbackEmail,
     role: "admin",
+    subscriptionStatus: "trial",
     createdAt: new Date().toISOString(),
   };
 }
@@ -106,6 +109,7 @@ export const useAuth = create<AuthState>((set, get) => ({
       name,
       email,
       role,
+      subscriptionStatus: "trial",
       createdAt: new Date().toISOString(),
     };
     set({ user: u });

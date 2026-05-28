@@ -5,6 +5,8 @@ export interface User {
   name: string;
   email: string;
   role: UserRole;
+  subscriptionStatus?: "trial" | "active" | "inactive";
+  subscriptionId?: string;
   createdAt: string;
 }
 
