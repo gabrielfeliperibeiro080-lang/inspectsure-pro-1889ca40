@@ -35,7 +35,7 @@ serve(async (req) => {
         auto_recurring: {
           frequency: 1,
           frequency_type: "months",
-          transaction_amount: 49.90, // Valor de exemplo, ajuste conforme necessário
+          transaction_amount: 150.00, // Valor mensal do plano
           currency_id: "BRL"
         },
         back_url: "https://inspectsure.com.br/app/configuracoes",
