@@ -83,17 +83,6 @@ function Settings() {
           <CardTitle className="text-base">Backend</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 text-sm">
-          <div className="flex items-start gap-3 rounded-lg border bg-amber-50 p-3 text-amber-900">
-            <AlertTriangle className="size-4 mt-0.5" />
-            <div>
-              <div className="font-medium">Modo offline — dados locais</div>
-              <p className="text-xs">
-                Por enquanto, os dados estão sendo salvos apenas no seu dispositivo
-                (localStorage). Conecte o Supabase para sincronização entre usuários,
-                backup automático e área do cliente.
-              </p>
-            </div>
-          </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-md border p-3">
               <div className="flex items-center gap-2 text-sm font-medium">
