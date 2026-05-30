@@ -36,23 +36,6 @@ function Login() {
     }
   };
 
-  const demo = async () => {
-    setLoading(true);
-    try {
-      await signIn("admin@cortex.com", "demo1234");
-      navigate({ to: "/app" });
-    } catch {
-      try {
-        await signUp("Administrador", "admin@cortex.com", "demo1234");
-        navigate({ to: "/app" });
-      } catch (e: any) {
-        toast.error(e?.message);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
       {/* Brand panel */}
@@ -165,15 +148,6 @@ function Login() {
           </form>
 
           <div className="space-y-3">
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              onClick={demo}
-              disabled={loading}
-            >
-              Entrar como demonstração
-            </Button>
             <p className="text-center text-sm text-muted-foreground">
               {mode === "signin" ? (
                 <>
