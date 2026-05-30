@@ -1,5 +1,4 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { Toaster } from "@/components/ui/sonner";
 import { AppShell } from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -12,7 +11,6 @@ export const Route = createFileRoute("/app")({
   component: () => (
     <>
       <AppShell />
-      <Toaster richColors position="top-right" />
     </>
   ),
 });
