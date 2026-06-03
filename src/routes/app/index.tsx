@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useData } from "@/lib/store";
+import { useAuth, useData } from "@/lib/store";
 import {
   Building2,
   ClipboardCheck,
@@ -7,6 +7,7 @@ import {
   Clock,
   AlertTriangle,
   Plus,
+  Info,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ export const Route = createFileRoute("/app/")({
 });
 
 function Dashboard() {
+  const { user } = useAuth();
   const { properties, inspections } = useData();
   const concluidas = inspections.filter((i) => i.status === "concluida");
   const pendentes = inspections.filter((i) => i.status !== "concluida");
@@ -57,8 +59,33 @@ function Dashboard() {
     }))
     .filter((x) => x.property);
 
+  let daysLeft = 0;
+  if (user?.createdAt) {
+    const created = new Date(user.createdAt);
+    const diff = Date.now() - created.getTime();
+    const passed = Math.floor(diff / (1000 * 60 * 60 * 24));
+    daysLeft = Math.max(0, 7 - passed);
+  }
+
   return (
     <div className="space-y-6">
+      {user?.subscriptionStatus !== "active" && (
+        <div className="flex items-center justify-between gap-3 rounded-lg border bg-blue-50/50 p-4 text-blue-900 shadow-sm dark:bg-blue-950/20 dark:text-blue-200">
+          <div className="flex items-center gap-3">
+            <Info className="size-5 text-blue-600 dark:text-blue-400" />
+            <div>
+              <p className="font-medium text-sm">Período de testes</p>
+              <p className="text-xs opacity-80">
+                Você tem {daysLeft} dia{daysLeft !== 1 ? 's' : ''} restante{daysLeft !== 1 ? 's' : ''} para testar todas as funcionalidades.
+              </p>
+            </div>
+          </div>
+          <Button asChild size="sm" variant="default" className="bg-blue-600 hover:bg-blue-700 text-white shrink-0">
+            <Link to="/app/configuracoes">Assinar agora</Link>
+          </Button>
+        </div>
+      )}
+
       <div className="flex items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Painel</h1>

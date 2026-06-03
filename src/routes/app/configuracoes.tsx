@@ -46,7 +46,15 @@ function Settings() {
               <div className="text-xs text-muted-foreground">
                 {user?.subscriptionStatus === "active" 
                   ? "Sua assinatura está ativa." 
-                  : "7 dias para conhecer todos os recursos."}
+                  : (() => {
+                      if (!user?.createdAt) return "Calculando...";
+                      const created = new Date(user.createdAt);
+                      const diff = Date.now() - created.getTime();
+                      const passed = Math.floor(diff / (1000 * 60 * 60 * 24));
+                      const daysLeft = Math.max(0, 7 - passed);
+                      return `Você tem ${daysLeft} dia${daysLeft !== 1 ? 's' : ''} restante${daysLeft !== 1 ? 's' : ''} no período de testes.`;
+                    })()
+                }
               </div>
             </div>
             {user?.subscriptionStatus === "active" ? (
