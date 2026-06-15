@@ -161,13 +161,12 @@ function ImoveisList() {
                 onChange={(v) => setForm({ ...form, ownerPhone: v })}
               />
             </div>
-            <DialogFooter className="gap-2 sm:gap-0">
-              <Button variant="outline" onClick={() => setOpen(false)} className="w-full sm:w-auto">
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setOpen(false)}>
                 Cancelar
               </Button>
-              <Button onClick={save} className="w-full sm:w-auto">Salvar</Button>
+              <Button onClick={save}>Salvar</Button>
             </DialogFooter>
-
           </DialogContent>
         </Dialog>
       </div>

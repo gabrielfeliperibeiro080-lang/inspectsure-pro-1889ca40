@@ -11,9 +11,9 @@ export async function compressImage(
   file: File | Blob,
   opts: CompressOptions = {},
 ): Promise<{ dataUrl: string; blob: Blob; width: number; height: number; sizeKB: number }> {
-  const maxDim = opts.maxDimension ?? 1280;
+  const maxDim = opts.maxDimension ?? 1920;
   const mimeType = opts.mimeType ?? "image/webp";
-  const initialQuality = opts.quality ?? 0.7;
+  const initialQuality = opts.quality ?? 0.82;
 
   const bitmap = await createImageBitmap(file);
   let { width, height } = bitmap;
@@ -28,10 +28,10 @@ export async function compressImage(
   ctx.drawImage(bitmap, 0, 0, width, height);
   bitmap.close?.();
 
-  // Target ~400KB to keep the inspection JSONB row small
+  // Try progressively lower quality until under ~1MB
   let q = initialQuality;
   let blob = await canvasToBlob(canvas, mimeType, q);
-  while (blob.size > 400 * 1024 && q > 0.4) {
+  while (blob.size > 1024 * 1024 && q > 0.5) {
     q -= 0.08;
     blob = await canvasToBlob(canvas, mimeType, q);
   }
@@ -39,7 +39,6 @@ export async function compressImage(
   const dataUrl = await blobToDataUrl(blob);
   return { dataUrl, blob, width, height, sizeKB: Math.round(blob.size / 1024) };
 }
-
 
 export async function makeThumbnail(file: File | Blob): Promise<string> {
   const { dataUrl } = await compressImage(file, {
