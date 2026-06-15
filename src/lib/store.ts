@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import type {
   Inspection,
@@ -11,6 +12,60 @@ import type {
   InspectionType,
   PropertyType,
 } from "./types";
+
+// Debounced persistence for inspection patches (avoids sending megabytes of
+// base64 photos on every keystroke / status click).
+const pendingPatches = new Map<string, Partial<Inspection>>();
+const pendingTimers = new Map<string, ReturnType<typeof setTimeout>>();
+const inflight = new Map<string, Promise<void>>();
+
+async function flushInspectionPatch(id: string) {
+  const patch = pendingPatches.get(id);
+  if (!patch) return;
+  pendingPatches.delete(id);
+  const prev = inflight.get(id) ?? Promise.resolve();
+  const run = prev.then(async () => {
+    const { error } = await supabase
+      .from("inspections")
+      .update(inspectionToDb(patch))
+      .eq("id", id);
+    if (error) {
+      console.error("[updateInspection] save failed", error);
+      toast.error("Não foi possível salvar. Verifique a conexão.");
+    }
+  });
+  inflight.set(id, run);
+  await run;
+}
+
+function scheduleInspectionPatch(id: string, patch: Partial<Inspection>, immediate = false) {
+  const merged = { ...(pendingPatches.get(id) ?? {}), ...patch };
+  pendingPatches.set(id, merged);
+  const existing = pendingTimers.get(id);
+  if (existing) clearTimeout(existing);
+  if (immediate) {
+    pendingTimers.delete(id);
+    void flushInspectionPatch(id);
+    return;
+  }
+  const t = setTimeout(() => {
+    pendingTimers.delete(id);
+    void flushInspectionPatch(id);
+  }, 800);
+  pendingTimers.set(id, t);
+}
+
+if (typeof window !== "undefined") {
+  window.addEventListener("beforeunload", () => {
+    for (const id of pendingTimers.keys()) {
+      const t = pendingTimers.get(id);
+      if (t) clearTimeout(t);
+      void flushInspectionPatch(id);
+    }
+  });
+}
+
+
 
 // ============================================================================
 // AUTH STORE — backed by Supabase Auth
