@@ -382,15 +382,19 @@ export const useData = create<DataState>((set, get) => ({
     return inspection;
   },
   updateInspection: async (id, patch) => {
-    const { error } = await supabase
-      .from("inspections")
-      .update(inspectionToDb(patch))
-      .eq("id", id);
-    if (error) throw new Error(error.message);
+    // Optimistic local update — UI stays responsive even on slow networks.
     set({
       inspections: get().inspections.map((i) => (i.id === id ? { ...i, ...patch } : i)),
     });
+    // Persist with debounce; finalization-style fields flush immediately.
+    const immediate =
+      patch.status !== undefined ||
+      patch.finishedAt !== undefined ||
+      patch.hash !== undefined ||
+      patch.signatures !== undefined;
+    scheduleInspectionPatch(id, patch, immediate);
   },
+
   deleteInspection: async (id) => {
     const { error } = await supabase.from("inspections").delete().eq("id", id);
     if (error) throw new Error(error.message);
